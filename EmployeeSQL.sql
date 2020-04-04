@@ -1,4 +1,4 @@
-﻿-- Exported from QuickDBD: https://www.quickdatabasediagrams.com/
+-- Exported from QuickDBD: https://www.quickdatabasediagrams.com/
 -- Link to schema: https://app.quickdatabasediagrams.com/#/d/vH0bt2
 -- NOTE! If you have used non-SQL datatypes in your design, you will have to change these here.
 
@@ -69,3 +69,38 @@ REFERENCES "employees" ("emp_no");
 ALTER TABLE "titles" ADD CONSTRAINT "fk_titles_emp_no" FOREIGN KEY("emp_no")
 REFERENCES "employees" ("emp_no");
 
+select * from departments;
+select * from dept_emp;
+select * from dept_manager;
+select * from employees;
+select * from salaries;
+select * from titles;
+
+-- Data Analysis
+
+-- 1. List the following details of each employee: employee number, last name,
+--    first name, gender, and salary.
+select employees.emp_no, employees.last_name, employees.first_name, employees.gender, salaries.salary
+from employees
+join salaries
+on employees.emp_no = salaries.emp_no;
+
+-- 2. List employees who were hired in 1986.
+select last_name, first_name
+from employees
+where hire_date between '1986/01/01' and '1986/12/31';
+
+-- 3.List the manager of each department with the following information: department number, department name,
+--   the managers employee number, last name, first name, and start and end employment dates;
+select departments.dept_no, departments.dept_name,dept_manager.emp_no,employees.last_name,employees.first_name,
+dept_manager.from_date,dept_manager.to_date
+from departments
+join dept_manager on departments.dept_no=dept_manager.dept_no
+join employees on dept_manager.emp_no=employees.emp_no;
+
+-- 4. List the department of each employee with the following information:
+--    employee number, last name, first name, and department name.
+select employees.emp_no, employees.last_name, employees.first_name, departments.dept_name
+from employees
+inner join dept_manager on employees.emp_no = dept_manager.emp_no 
+inner join departments on dept_manager.dept_no = departments.dept_no;
